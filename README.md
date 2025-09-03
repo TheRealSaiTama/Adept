@@ -1,116 +1,185 @@
-# Adept 🚀
+<div align="center">
 
-The multi-cloud, context-aware AI agent that lives in your terminal.
+<h1>🔥 ADEPT — The AI Engineer's Workflow Orchestrator</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](#) [![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)](#) [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](#)
+<p>
+  <em>Lightning-fast, context-aware, multi-cloud terminal agent. Build, reason, and ship without leaving your shell.</em>
+</p>
 
-## Visual Demo
+<p>
+  <a href="#"><img alt="MIT" src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" /></a>
+  <a href="#"><img alt="Python" src="https://img.shields.io/badge/Python-3.11%2B-3776AB.svg?style=for-the-badge&logo=python&logoColor=white" /></a>
+  <a href="#"><img alt="Typer" src="https://img.shields.io/badge/CLI-Typer-0A7ACA?style=for-the-badge" /></a>
+  <a href="#"><img alt="Rich" src="https://img.shields.io/badge/Terminal-Rich-CA0B4A?style=for-the-badge" /></a>
+  <a href="#"><img alt="Gemini" src="https://img.shields.io/badge/Provider-Gemini-1f6feb?style=for-the-badge" /></a>
+  <a href="#"><img alt="Groq" src="https://img.shields.io/badge/Provider-Groq-111111?style=for-the-badge" /></a>
+</p>
+
+</div>
+
+---
+
+## 🎬 Visual Demo
 
 <video src="adept/video.mp4" controls autoplay loop muted playsinline width="100%"></video>
 
 If the video does not load, download it: [Adept demo video](adept/video.mp4)
 
-## What is Adept?
+---
 
-Adept is a multi-cloud, context-aware AI orchestrator and intelligent agent for the terminal. It unifies provider-agnostic model access, local-context RAG, and stateful multi-step automation into a single, elegant CLI. With Adept, you can index your codebase, ask grounded questions, chain complex tasks, and fail over between providers—all without leaving your shell.
+## ✨ What is Adept?
 
-## Why Adept?
+Adept is a context-aware AI orchestrator designed for real work in real repos. It unifies provider-agnostic model access (Gemini, Groq), local semantic indexing (RAG), and stateful multi-step automation into a single, elegant CLI.
 
-- **Generic LLMs are context-blind**: They don’t know your repo, your stack, or your constraints. Adept builds a local semantic index to inject the right code context at the right moment.
-- **APIs change and clouds fail**: Vendor lock-in and outages disrupt work. Adept lets you switch providers on demand with `--provider`, keeping you productive.
-- **Real workflows are multi-step**: Hard problems need structured, stateful execution. Adept’s `chain` runs multi-step plans with conversational memory across steps.
+- Index your codebase and ask grounded questions.
+- Chain complex tasks with memory across steps.
+- Fail over between providers without changing your workflow.
 
-## Features
+> Adept is engineered to be resilient, legible, and fast under deadline pressure.
 
-| Feature | What it does | CLI |
-|---|---|---|
-| **Multi-Cloud Resilience** | First-class support for Gemini and Groq with a unified interface and request shaping. | `--provider gemini|groq` |
-| **Intelligent Model Selection** | Human-friendly model aliases mapped to production IDs. | `--model <alias>` |
-| **Stateful Workflow Automation** | Execute numbered, multi-step task lists with conversational continuity. | `adept chain execute "1. … 2. … 3. …"` |
-| **The "Adept Brain" (Context-Aware RAG)** | Build a LanceDB index over your repo and inject relevant snippets into prompts. | `adept index create` + `--context` |
-| **Self-Diagnostics** | Verify provider access and discover available models via the live APIs. | `adept check models -p <provider>` |
-| **Premium Terminal UX** | Rich banners, panels, tables, and progress bars for clarity under pressure. | Built with `rich` |
+---
 
-### Providers and Model Aliases
+## ⚡️ Highlights
 
-- **Gemini**: `default → gemini-1.5-pro`, `pro → gemini-1.5-pro`, `flash → gemini-1.5-flash`
-- **Groq**: `default → llama-3.1-8b-instant`, `llama3-8b → llama-3.1-8b-instant`, `llama3-70b → llama-3.1-70b-versatile`, `mixtral → mixtral-8x7b-32768`, `gemma → gemma2-9b-it`
+- Multi-cloud by design — switch between Gemini and Groq with a flag.
+- Model aliases that map to production-ready IDs you actually want to use.
+- Context-aware RAG over your repo via LanceDB + SentenceTransformers.
+- Statefully execute numbered task chains with conversation memory.
+- First-class terminal UX: banners, panels, tables, progress bars.
 
-## Getting Started
+### Supported Providers & Aliases
+
+- Gemini: `default → gemini-1.5-pro`, `pro → gemini-1.5-pro`, `flash → gemini-1.5-flash`
+- Groq: `default → llama-3.1-8b-instant`, `llama3-8b → llama-3.1-8b-instant`, `llama3-70b → llama-3.1-70b-versatile`, `mixtral → mixtral-8x7b-32768`, `gemma → gemma2-9b-it`
+
+---
+
+## 🚀 Quickstart
 
 ```bash
 # 1) Clone
 git clone https://github.com/yourname/adept-cli.git
 cd adept-cli
 
-# 2) (Recommended) Use a virtualenv
+# 2) (Recommended) Virtualenv
 python3 -m venv .venv
 source .venv/bin/activate
 
-# 3) Install
+# 3) Install dependencies (choose one)
+# a) If you have a requirements file
 pip install -r requirements.txt
+# b) Or install the essentials directly
+pip install "typer[all]" rich httpx python-dotenv lancedb sentence-transformers
 
 # 4) Configure environment
-# Create .env in the project root with your provider keys
 cat > .env << 'EOF'
 GEMINI_API_KEY=your_gemini_key
 GROQ_API_KEY=your_groq_key
 EOF
 
-# 5) (Optional but powerful) Index your codebase for RAG
-adept index create
+# 5) Build a local code index (optional but powerful)
+python -m adept.main index create
 ```
 
-## Usage
+---
 
-- **Ask with context (RAG-powered)**
+## 🧭 Usage Cheat Sheet
+
+You can use the module entrypoint or an installed console script. Below examples use the module form for portability.
+
+- Ask with context (RAG-powered)
 
 ```bash
-# Ensure you have an index first
-adept index create
+# Ensure an index exists first
+python -m adept.main index create
 
-# Ask a grounded question with your code context
-adept write execute "Refactor the data loader for streaming efficiency." \
+# Ask a grounded question with code context
+python -m adept.main write execute "Refactor the data loader for streaming efficiency." \
   --provider groq --model llama3-8b --context
 ```
 
-- **Run a multi-step chain with memory**
+- Run a multi-step chain with memory
 
 ```bash
 description='1. Audit the repository for dead code. 2. Propose unit tests for core modules. 3. Draft a CI test matrix.'
-adept chain execute "$description" --provider gemini --model flash --context
+python -m adept.main chain execute "$description" --provider gemini --model flash --context
 ```
 
-- **Discover models for a provider**
+- Discover models available to your key
 
 ```bash
-adept check models --provider groq
+# Gemini
+python -m adept.main check models --provider gemini
+# Groq
+python -m adept.main check models --provider groq
 ```
 
-- **Switch providers and models on demand**
+- Switch providers/models on demand
 
 ```bash
 # Gemini Pro
-adept write execute "Summarize the architecture of this project." -p gemini -m pro
+python -m adept.main write execute "Summarize the architecture of this project." -p gemini -m pro
 
 # Groq Llama 3.1 70B
-adept write execute "Generate a test plan for the indexing module." -p groq -m llama3-70b
+python -m adept.main write execute "Generate a test plan for the indexing module." -p groq -m llama3-70b
 ```
 
-## A Note on Engineering
+---
 
-Adept was engineered as a production-grade CLI with a clean Typer-based command architecture, rich terminal UX, and robust provider abstractions. Building it meant normalizing divergent chat schemas (Gemini vs. Groq), handling real-world API quirks and auth flows, and designing a resilient model-alias system for rapid iteration. The RAG pipeline indexes your repo with SentenceTransformers (`all-MiniLM-L6-v2`) and LanceDB, then injects the most relevant snippets into prompts via `--context`. The `chain` executor maintains conversational state across steps, enabling complex, stateful workflows. Throughout, I focused on fault-tolerant HTTP, meaningful error surfaces, and a developer experience that feels fast, legible, and dependable under deadline pressure.
+## 🧠 How it Works (High Level)
 
-## Tech Stack
+- CLI & UX: Typer for command structure; Rich for expressive, readable TUI.
+- Providers: Normalized request/response across Gemini and Groq.
+- RAG: Index your repo with SentenceTransformers (`all-MiniLM-L6-v2`) into LanceDB, retrieve top chunks, and prepend as grounded context.
+- Chains: Maintain conversation history across steps for continuity and reasoning.
 
-- **CLI**: Typer
-- **Terminal UI**: Rich
-- **HTTP**: httpx
-- **Config**: python-dotenv
-- **Vector DB**: LanceDB
-- **Embeddings**: SentenceTransformers (`all-MiniLM-L6-v2`)
-- **Python**: 3.11+
+---
 
-## License
+## 🔐 Environment & Secrets
+
+Create a `.env` file at the project root:
+
+```bash
+GEMINI_API_KEY=your_gemini_key
+GROQ_API_KEY=your_groq_key
+```
+
+Tips:
+- Never echo secrets in terminals or commit them to git.
+- Use provider-specific billing/quota dashboards to increase limits when needed.
+
+---
+
+## 🧰 Troubleshooting
+
+- 429 Quota Exceeded (Gemini): Slow down request rate, switch to a lighter model (e.g., `flash`), or request higher quota. You can verify access with:
+
+```bash
+python -m adept.main check models --provider gemini
+```
+
+- No index found: Run the indexer first.
+
+```bash
+python -m adept.main index create
+```
+
+- Invalid API key: Ensure your `.env` file exists and is loaded in the shell where you run the commands.
+
+---
+
+## 🏗️ Tech Stack
+
+- CLI: Typer
+- Terminal UI: Rich
+- HTTP: httpx
+- Config: python-dotenv
+- Vector DB: LanceDB
+- Embeddings: SentenceTransformers (`all-MiniLM-L6-v2`)
+- Python: 3.11+
+
+---
+
+## 📜 License
 
 MIT © Contributors
